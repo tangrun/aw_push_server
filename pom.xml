@@ -6,10 +6,7 @@
     <groupId>cn.wildfirechat</groupId>
     <artifactId>push</artifactId>
     <version>0.1.1</version>
-    <modules>
-        <module>hms</module>
-    </modules>
-    <packaging>pom</packaging>
+
 
     <name>push</name>
     <description>Demo project for Spring Boot</description>
@@ -80,7 +77,7 @@
 
         <dependency>
             <groupId>com.huawei.pushplatform</groupId>
-            <artifactId>push.java.sample</artifactId>
+            <artifactId>hms-push-java-sample</artifactId>
             <version>1.0</version>
         </dependency>
 
