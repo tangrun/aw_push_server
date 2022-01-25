@@ -62,19 +62,19 @@ public class AndroidPushServiceImpl implements AndroidPushService {
 
             switch (pushMessage.getPushType()) {
                 case AndroidPushType.ANDROID_PUSH_TYPE_XIAOMI:
-                    xiaomiPush.push(pushMessage);
+                    xiaomiPush.push_aw_chat(pushMessage);
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_HUAWEI:
-                    hmsPush.push(pushMessage);
+                    hmsPush.push_aw_chat_v1(pushMessage);//旧方式 官方已废弃（不推荐使用）
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_MEIZU:
                     meiZuPush.push(pushMessage);
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_VIVO:
-                    vivoPush.push(pushMessage);
+                    vivoPush.push_aw_chat(pushMessage);
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_OPPO:
-                    oppoPush.push(pushMessage);
+                    oppoPush.push_aw_chat(pushMessage);
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_FCM:
                     fcmPush.push(pushMessage);

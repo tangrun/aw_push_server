@@ -25,6 +25,66 @@ public class XiaomiPush {
     @Autowired
     private XiaomiConfig mConfig;
 
+    public void push_aw_chat(PushMessage pushMessage) {
+        Constants.useOfficial();
+        Sender sender = new Sender(mConfig.getAppSecret());
+
+        Message message;
+        String token = pushMessage.getDeviceToken();
+        pushMessage.deviceToken = null;
+        if(pushMessage.pushMessageType != PushMessageType.PUSH_MESSAGE_TYPE_NORMAL && pushMessage.pushMessageType != PushMessageType.PUSH_MESSAGE_TYPE_FRIEND_REQUEST) {
+            //voip
+            long timeToLive = 60 * 1000; // 1 min
+            //message = new Message.Builder()
+            //        .payload(new Gson().toJson(pushMessage))
+            //        .restrictedPackageName(pushMessage.getPackageName())
+            //        .passThrough(1)  //0、通知栏消息；1、透传消息；
+            //        .timeToLive(timeToLive)
+            //        .enableFlowControl(false)
+            //        .extra("channel_id","high_custom_1")
+            //        .build();
+            message = new Message.Builder()
+                    .payload(new Gson().toJson(pushMessage))
+                    .title(pushMessage.senderName)
+                    .description(pushMessage.unReceivedMsg==2?"邀请您语音通话":"邀请您视频通话")
+                    .notifyType(NOTIFY_TYPE_ALL)
+                    .notifyId((int)(System.currentTimeMillis()/1000))
+                    .restrictedPackageName(pushMessage.getPackageName())
+                    .passThrough(0)
+                    .timeToLive(timeToLive)
+                    .enableFlowControl(true)
+                    .extra("channel_id", "high_custom_1")
+                    .build();
+        } else {
+            long timeToLive = 600 * 1000;//10 min
+            message = new Message.Builder()
+                    .payload(new Gson().toJson(pushMessage))
+                    //.title("新消息提醒")
+                    .title(pushMessage.senderName)
+                    .description(pushMessage.pushContent)
+                    .notifyType(NOTIFY_TYPE_ALL)
+                    .notifyId((int)(System.currentTimeMillis()/1000))
+                    .restrictedPackageName(pushMessage.getPackageName())
+                    .passThrough(0)
+                    .timeToLive(timeToLive)
+                    .enableFlowControl(true)
+                    .extra("channel_id", "high_system")
+                    .build();
+        }
+
+        Result result = null;
+        try {
+            result = sender.send(message, token, 3);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        LOG.info("Server response: MessageId: " + result.getMessageId()
+                + " ErrorCode: " + result.getErrorCode().toString()
+                + " Reason: " + result.getReason());
+    }
 
     public void push(PushMessage pushMessage) {
         Constants.useOfficial();
