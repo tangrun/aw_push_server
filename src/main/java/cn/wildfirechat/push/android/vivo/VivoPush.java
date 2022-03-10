@@ -61,7 +61,7 @@ public class VivoPush {
             senderMessage.setAuthToken(authToken);
             Message.Builder builder = new Message.Builder()
                     .regId(pushMessage.getDeviceToken())//该测试手机设备订阅推送后生成的regId 
-                    .notifyType(3)//通知类型 1:无，2:响铃，3:振动，4:响铃和振动
+                    .notifyType(4)//通知类型 1:无，2:响铃，3:振动，4:响铃和振动
                     .title(title)
                     .content(content)
                     .classification(1)//消息类型 0：运营类消息，1：系统类消息。不填默认为0
@@ -133,7 +133,7 @@ public class VivoPush {
             senderMessage.setAuthToken(authToken);
             Message.Builder builder = new Message.Builder()
                     .regId(pushMessage.getDeviceToken())//该测试手机设备订阅推送后生成的regId 
-                    .notifyType(3)
+                    .notifyType(4)
                     .title(title)
                     .content(pushMessage.pushContent)
                     .timeToLive(1000)

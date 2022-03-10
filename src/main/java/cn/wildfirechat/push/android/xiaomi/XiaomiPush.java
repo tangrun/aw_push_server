@@ -50,10 +50,13 @@ public class XiaomiPush {
                     .notifyType(NOTIFY_TYPE_ALL)
                     .notifyId((int)(System.currentTimeMillis()/1000))
                     .restrictedPackageName(pushMessage.getPackageName())
-                    .passThrough(0)
+                    .passThrough(0)//0、通知栏消息；1、透传消息；
                     .timeToLive(timeToLive)
                     .enableFlowControl(true)
                     .extra("channel_id", "high_custom_1")
+                    .extra(Constants.EXTRA_PARAM_SOUND_URI, "android.resource://" + pushMessage.getPackageName() + "/raw/call")
+                    .extra(Constants.EXTRA_PARAM_NOTIFY_EFFECT, Constants.NOTIFY_ACTIVITY)
+                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
                     .build();
         } else {
             long timeToLive = 600 * 1000;//10 min
@@ -69,6 +72,8 @@ public class XiaomiPush {
                     .timeToLive(timeToLive)
                     .enableFlowControl(true)
                     .extra("channel_id", "high_system")
+                    .extra(Constants.EXTRA_PARAM_NOTIFY_EFFECT, Constants.NOTIFY_ACTIVITY)
+                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
                     .build();
         }
 

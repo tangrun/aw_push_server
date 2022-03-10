@@ -19,6 +19,7 @@ import com.huawei.push.model.Importance;
 import com.huawei.push.model.Urgency;
 import com.huawei.push.model.Visibility;
 import com.huawei.push.reponse.SendResponse;
+import com.huawei.push.util.InitAppUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,101 +74,115 @@ public class HMSPush {
             return;
         }
 
-        HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(huaweiApp);
-
-        // 通知栏消息
-        String title, content;
-        if (pushMessage.pushMessageType == PushMessageType.PUSH_MESSAGE_TYPE_FRIEND_REQUEST) {
-            if (StringUtils.isEmpty(pushMessage.senderName)) {
-                title = "好友请求";
-            } else {
-                title = pushMessage.senderName + " 请求加您为好友";
-            }
-            content = pushMessage.pushContent;
-        } else if (pushMessage.pushMessageType == PushMessageType.PUSH_MESSAGE_TYPE_NORMAL) {
-            if (StringUtils.isEmpty(pushMessage.senderName)) {
-                title = "消息";
-            } else {
-                title = pushMessage.senderName;
-            }
-            content = pushMessage.pushContent;
-        } else {
-            if (StringUtils.isEmpty(pushMessage.senderName)) {
-                title = "消息";
-            } else {
-                title = pushMessage.senderName;
-            }
-            content = pushMessage.unReceivedMsg == 2 ? "邀请您语音通话" : "邀请您视频通话";
-        }
-
-        // 通知内容
-        Notification notification = Notification.builder()
-                .setTitle(title)
-                .setBody(content)
-                .build();
-
-        //JSONObject multiLangKey = new JSONObject();
-        //JSONObject titleKey = new JSONObject();
-        //titleKey.put("en", "好友请求");
-        //JSONObject bodyKey = new JSONObject();
-        //bodyKey.put("en", "My name is %s, I am from %s.");
-        //multiLangKey.put("key1", titleKey);
-        //multiLangKey.put("key2", bodyKey);
-
-        // 指示灯控制
-        LightSettings lightSettings = LightSettings.builder()
-                .setColor(Color.builder().setAlpha(0f).setRed(0f).setBlue(1f).setGreen(1f).build())
-                .setLightOnDuration("3.5")
-                .setLightOffDuration("5S")
-                .build();
-
-        AndroidNotification androidNotification = AndroidNotification.builder()
-                //.setIcon("/raw/ic_launcher2")
-                //.setColor("#AACCDD")
-                .setSound("/raw/call")
-                .setDefaultSound(false)
-                //.setTag("tagBoom")
-                .setClickAction(ClickAction.builder().setType(3).setIntent("cn.cdblue.awchat.app.main.MainActivity").build())
-                //.setBodyLocKey("key2")
-                //.addBodyLocArgs("boy").addBodyLocArgs("dog")
-                //.setTitleLocKey("key1")
-                //.addTitleLocArgs("Girl").addTitleLocArgs("Cat")
-                //.setChannelId("message")//渠道ID
-                //.setNotifySummary("some summary")//通知摘要
-                //.setMultiLangkey(multiLangKey)//多语言
-                //.setStyle(1)
-                //.setBigTitle("Big Boom Title")
-                //.setBigBody("Big Boom Body")
-                //.setAutoClear(86400000)
-                .setNotifyId((int) (System.currentTimeMillis() / 1000))
-                .setGroup(pushMessage.sender)
-                .setImportance(Importance.NORMAL.getValue())
-                .setLightSettings(lightSettings)
-                .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass("Classic").build())
-                .setVisibility(Visibility.PUBLIC.getValue())
-                .setForegroundShow(true)
-                //.addInboxContent("content1").addInboxContent("content2").addInboxContent("content3").addInboxContent("content4").addInboxContent("content5")
-                //.addButton(Button.builder().setName("button1").setActionType(0).build())
-                //.addButton(Button.builder().setName("button2").setActionType(1).setIntentType(0).setIntent("https://com.huawei.hms.hmsdemo/deeplink").build())
-                //.addButton(Button.builder().setName("button3").setActionType(4).setData("your share link").build())
-                .build();
-
-        AndroidConfig androidConfig = AndroidConfig.builder().setCollapseKey(-1)
-                .setUrgency(Urgency.HIGH.getValue())
-                .setTtl("10000s")
-                .setBiTag("the_sample_bi_tag_for_receipt_service")
-                .setNotification(androidNotification)
-                .build();
-
-        Message message = Message.builder().setNotification(notification)
-                .setAndroidConfig(androidConfig)
-                .addToken(pushMessage.deviceToken)
-                .build();
-
         try {
+            HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(huaweiApp);
+
+            // 指示灯控制
+            LightSettings lightSettings = LightSettings.builder()
+                    .setColor(Color.builder().setAlpha(0f).setRed(0f).setBlue(1f).setGreen(1f).build())
+                    .setLightOnDuration("3.5")
+                    .setLightOffDuration("5S")
+                    .build();
+
+            AndroidNotification androidNotification = AndroidNotification.builder()
+                    //.setIcon("/raw/ic_launcher2")
+                    //.setColor("#AACCDD")
+                    //.setSound("/raw/call")//自定义铃声
+                    .setDefaultSound(true)
+                    //.setTag("tagBoom")
+                    .setClickAction(ClickAction.builder().setType(3).setIntent("cn.cdblue.awchat.app.main.MainActivity").build())
+                    //.setBodyLocKey("key2")
+                    //.addBodyLocArgs("boy").addBodyLocArgs("dog")
+                    //.setTitleLocKey("key1")
+                    //.addTitleLocArgs("Girl").addTitleLocArgs("Cat")
+                    .setChannelId("message")//渠道ID
+                    //.setNotifySummary("some summary")//通知摘要
+                    //.setMultiLangkey(multiLangKey)//多语言
+                    //.setStyle(1)
+                    //.setBigTitle("Big Boom Title")
+                    //.setBigBody("Big Boom Body")
+                    //.setAutoClear(86400000)
+                    .setNotifyId((int)(System.currentTimeMillis()/1000))
+                    .setGroup(pushMessage.sender)
+                    .setImportance(Importance.NORMAL.getValue())
+                    .setLightSettings(lightSettings)
+                    .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass("cn.cdblue.awchat.app.main.SplashActivity").build())
+                    .setVisibility(Visibility.PUBLIC.getValue())
+                    .setForegroundShow(true)
+                    //.addInboxContent("content1").addInboxContent("content2").addInboxContent("content3").addInboxContent("content4").addInboxContent("content5")
+                    //.addButton(Button.builder().setName("button1").setActionType(0).build())
+                    //.addButton(Button.builder().setName("button2").setActionType(1).setIntentType(0).setIntent("https://com.huawei.hms.hmsdemo/deeplink").build())
+                    //.addButton(Button.builder().setName("button3").setActionType(4).setData("your share link").build())
+                    .build();
+
+            // 通知栏消息
+            String title,content;
+            if (pushMessage.pushMessageType == PushMessageType.PUSH_MESSAGE_TYPE_FRIEND_REQUEST) {
+                if (StringUtils.isEmpty(pushMessage.senderName)) {
+                    title = "好友请求";
+                } else {
+                    title = pushMessage.senderName + " 请求加您为好友";
+                }
+                content = pushMessage.pushContent;
+            }else if(pushMessage.pushMessageType == PushMessageType.PUSH_MESSAGE_TYPE_NORMAL){
+                if (StringUtils.isEmpty(pushMessage.senderName)) {
+                    title = "消息";
+                } else {
+                    title = pushMessage.senderName;
+                }
+                content = pushMessage.pushContent;
+            } else {
+                if (StringUtils.isEmpty(pushMessage.senderName)) {
+                    title = "消息";
+                } else {
+                    title = pushMessage.senderName;
+                }
+                content = pushMessage.unReceivedMsg==2?"邀请您语音通话":"邀请您视频通话";
+                androidNotification = AndroidNotification.builder()
+                        .setSound("/raw/call")
+                        .setDefaultSound(false)
+                        .setClickAction(ClickAction.builder().setType(3).setIntent("cn.cdblue.awchat.app.main.MainActivity").build())
+                        .setChannelId("ChatNotificationHelper")//渠道ID
+                        .setNotifyId((int)(System.currentTimeMillis()/1000))
+                        .setGroup(pushMessage.sender)
+                        .setImportance(Importance.NORMAL.getValue())
+                        .setLightSettings(lightSettings)
+                        .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass("cn.cdblue.awchat.app.main.SplashActivity").build())
+                        .setVisibility(Visibility.PUBLIC.getValue())
+                        .setForegroundShow(true)
+                        .build();
+            }
+
+            // 通知内容
+            Notification notification = Notification.builder()
+                    .setTitle(title)
+                    .setBody(content)
+                    .build();
+
+            //JSONObject multiLangKey = new JSONObject();
+            //JSONObject titleKey = new JSONObject();
+            //titleKey.put("en", "好友请求");
+            //JSONObject bodyKey = new JSONObject();
+            //bodyKey.put("en", "My name is %s, I am from %s.");
+            //multiLangKey.put("key1", titleKey);
+            //multiLangKey.put("key2", bodyKey);
+
+
+            AndroidConfig androidConfig = AndroidConfig.builder().setCollapseKey(-1)
+                    .setUrgency(Urgency.HIGH.getValue())
+                    .setTtl("10000s")
+                    .setBiTag("the_sample_bi_tag_for_receipt_service")
+                    .setNotification(androidNotification)
+                    .build();
+
+            Message message = Message.builder().setNotification(notification)
+                    .setAndroidConfig(androidConfig)
+                    .addToken(pushMessage.deviceToken)
+                    .build();
+
             SendResponse response = huaweiMessaging.sendMessage(message);
             LOG.info("HMS推送 token：{} 结果：{}", pushMessage.deviceToken, response.getMsg());
-        } catch (HuaweiMesssagingException e) {
+        }catch (HuaweiMesssagingException e){
             e.printStackTrace();
             LOG.info("HMS推送异常：", e);
         }
