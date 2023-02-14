@@ -115,6 +115,13 @@ public class HMSPush {
                     //.addButton(Button.builder().setName("button3").setActionType(4).setData("your share link").build())
                     .build();
 
+            AndroidConfig.Builder androidConfigBuilder = AndroidConfig.builder().setCollapseKey(-1)
+                    .setUrgency(Urgency.HIGH.getValue())
+                    .setTtl("10000s")
+                    .setBiTag("the_sample_bi_tag_for_receipt_service")
+                    .setCategory("IM")
+                    .setNotification(androidNotification);
+
             // 通知栏消息
             String title,content;
             if (pushMessage.pushMessageType == PushMessageType.PUSH_MESSAGE_TYPE_FRIEND_REQUEST) {
@@ -151,6 +158,8 @@ public class HMSPush {
                         .setVisibility(Visibility.PUBLIC.getValue())
                         .setForegroundShow(true)
                         .build();
+                androidConfigBuilder
+                          .setCategory("VOIP");
             }
 
             // 通知内容
@@ -168,11 +177,7 @@ public class HMSPush {
             //multiLangKey.put("key2", bodyKey);
 
 
-            AndroidConfig androidConfig = AndroidConfig.builder().setCollapseKey(-1)
-                    .setUrgency(Urgency.HIGH.getValue())
-                    .setTtl("10000s")
-                    .setBiTag("the_sample_bi_tag_for_receipt_service")
-                    .setNotification(androidNotification)
+            AndroidConfig androidConfig = androidConfigBuilder
                     .build();
 
             Message message = Message.builder().setNotification(notification)
