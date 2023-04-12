@@ -54,9 +54,11 @@ public class XiaomiPush {
                     .timeToLive(timeToLive)
                     .enableFlowControl(true)
                     .extra("channel_id", "high_custom_1")
-                    .extra(Constants.EXTRA_PARAM_SOUND_URI, "android.resource://" + pushMessage.getPackageName() + "/raw/call")
+//                    .extra(Constants.EXTRA_PARAM_SOUND_URI, "android.resource://" + pushMessage.getPackageName() + "/raw/call")
+                    .extra(Constants.EXTRA_PARAM_SOUND_URI, mConfig.getExtraParamSoundURI())
                     .extra(Constants.EXTRA_PARAM_NOTIFY_EFFECT, Constants.NOTIFY_ACTIVITY)
-                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
+//                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
+                    .extra(Constants.EXTRA_PARAM_INTENT_URI, mConfig.getExtraParamIntentURI())
                     .build();
         } else {
             long timeToLive = 600 * 1000;//10 min
@@ -73,7 +75,8 @@ public class XiaomiPush {
                     .enableFlowControl(true)
                     .extra("channel_id", "high_system")
                     .extra(Constants.EXTRA_PARAM_NOTIFY_EFFECT, Constants.NOTIFY_ACTIVITY)
-                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
+//                    .extra(Constants.EXTRA_PARAM_INTENT_URI, "intent:#Intent;component=cn.cdblue.awchat/.app.main.MainActivity;end")
+                    .extra(Constants.EXTRA_PARAM_INTENT_URI, mConfig.getExtraParamIntentURI())
                     .build();
         }
 

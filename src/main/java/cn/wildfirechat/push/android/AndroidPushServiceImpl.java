@@ -5,6 +5,7 @@ import cn.wildfirechat.push.PushMessageType;
 import cn.wildfirechat.push.Utility;
 import cn.wildfirechat.push.android.fcm.FCMPush;
 import cn.wildfirechat.push.android.hms.HMSPush;
+import cn.wildfirechat.push.android.honor.HonorPush;
 import cn.wildfirechat.push.android.meizu.MeiZuPush;
 import cn.wildfirechat.push.android.oppo.OppoPush;
 import cn.wildfirechat.push.android.vivo.VivoPush;
@@ -40,6 +41,9 @@ public class AndroidPushServiceImpl implements AndroidPushService {
 
     @Autowired
     private FCMPush fcmPush;
+
+    @Autowired
+    private HonorPush honorPush;
 
     private ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors() * 100,
             60L, TimeUnit.SECONDS,
@@ -78,6 +82,9 @@ public class AndroidPushServiceImpl implements AndroidPushService {
                     break;
                 case AndroidPushType.ANDROID_PUSH_TYPE_FCM:
                     fcmPush.push(pushMessage);
+                    break;
+                case AndroidPushType.ANDROID_PUSH_TYPE_HONOR:
+                    honorPush.push(pushMessage);
                     break;
                 default:
                     LOG.info("unknown push type");

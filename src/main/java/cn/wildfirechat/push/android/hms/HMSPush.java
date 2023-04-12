@@ -90,7 +90,7 @@ public class HMSPush {
                     //.setSound("/raw/call")//自定义铃声
                     .setDefaultSound(true)
                     //.setTag("tagBoom")
-                    .setClickAction(ClickAction.builder().setType(3).setIntent("cn.cdblue.awchat.app.main.MainActivity").build())
+                    .setClickAction(ClickAction.builder().setType(3).setIntent(mConfig.getMainClass()).build())
                     //.setBodyLocKey("key2")
                     //.addBodyLocArgs("boy").addBodyLocArgs("dog")
                     //.setTitleLocKey("key1")
@@ -106,7 +106,7 @@ public class HMSPush {
                     .setGroup(pushMessage.sender)
                     .setImportance(Importance.NORMAL.getValue())
                     .setLightSettings(lightSettings)
-                    .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass("cn.cdblue.awchat.app.main.SplashActivity").build())
+                    .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass(mConfig.getLauncherClass()).build())
                     .setVisibility(Visibility.PUBLIC.getValue())
                     .setForegroundShow(true)
                     //.addInboxContent("content1").addInboxContent("content2").addInboxContent("content3").addInboxContent("content4").addInboxContent("content5")
@@ -148,13 +148,13 @@ public class HMSPush {
                 androidNotification = AndroidNotification.builder()
                         .setSound("/raw/call")
                         .setDefaultSound(false)
-                        .setClickAction(ClickAction.builder().setType(3).setIntent("cn.cdblue.awchat.app.main.MainActivity").build())
+                        .setClickAction(ClickAction.builder().setType(3).setIntent(mConfig.getMainClass()).build())
                         .setChannelId("ChatNotificationHelper")//渠道ID
                         .setNotifyId((int)(System.currentTimeMillis()/1000))
                         .setGroup(pushMessage.sender)
                         .setImportance(Importance.NORMAL.getValue())
                         .setLightSettings(lightSettings)
-                        .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass("cn.cdblue.awchat.app.main.SplashActivity").build())
+                        .setBadge(BadgeNotification.builder().setAddNum(1).setBadgeClass(mConfig.getLauncherClass()).build())
                         .setVisibility(Visibility.PUBLIC.getValue())
                         .setForegroundShow(true)
                         .build();

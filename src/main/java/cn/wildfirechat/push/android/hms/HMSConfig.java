@@ -10,6 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 public class HMSConfig {
     private String appSecret;
     private String appId;
+    private String mainClass;
+    private String launcherClass;
 
     public String getAppSecret() {
         return appSecret;
@@ -25,5 +27,21 @@ public class HMSConfig {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public String getMainClass() {
+        return mainClass;
+    }
+
+    public void setMainClass(String mainClass) {
+        this.mainClass = mainClass;
+    }
+
+    public String getLauncherClass() {
+        return launcherClass;
+    }
+
+    public void setLauncherClass(String launcherClass) {
+        this.launcherClass = launcherClass;
     }
 }
